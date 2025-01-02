@@ -46,7 +46,7 @@ const TaskList = () => {
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [answer, tasks, currentTaskIndex,handleConfirmClick]);
+    }, [answer, tasks, currentTaskIndex]);
 
     const handleInputChange = (value) => {
         setAnswer(value);
