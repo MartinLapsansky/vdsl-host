@@ -36,5 +36,8 @@
     ]
   },
   "proxy": "http://localhost:8080",
-  "homepage": "https://martinlapsansky.github.io/vdsl-host"
+  "homepage": "https://martinlapsansky.github.io/vdsl-host",
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
+  }
 }
