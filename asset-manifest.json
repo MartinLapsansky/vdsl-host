@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/vdsl/static/css/main.11b86d62.css",
+    "main.js": "/vdsl/static/js/main.e549eb0a.js",
+    "index.html": "/vdsl/index.html",
+    "main.11b86d62.css.map": "/vdsl/static/css/main.11b86d62.css.map",
+    "main.e549eb0a.js.map": "/vdsl/static/js/main.e549eb0a.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.11b86d62.css",
+    "static/js/main.e549eb0a.js"
+  ]
+}
