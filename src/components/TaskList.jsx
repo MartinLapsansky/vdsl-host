@@ -15,6 +15,8 @@ const TaskList = () => {
     const [finalAnswer, setFinalAnswer] = useState('');
     const [showCelebration, setShowCelebration] = useState(false);
 
+    axios.defaults.baseURL= 'https://2f70-78-99-33-3.ngrok-free.app/';
+
     useEffect(() => {
         axios.get('/api/escape-room/tasks')
             .then(response => {

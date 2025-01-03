@@ -38,6 +38,7 @@
     ]
   },
   "homepage": "https://martinlapsansky.github.io/vdsl-host",
+  "proxy": "https://2f70-78-99-33-3.ngrok-free.app/",
   "devDependencies": {
     "gh-pages": "^6.3.0"
   }
