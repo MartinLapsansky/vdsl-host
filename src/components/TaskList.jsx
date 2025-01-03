@@ -18,6 +18,7 @@ const TaskList = () => {
     axios.defaults.baseURL = 'https://30b9-78-99-33-3.ngrok-free.app';
 
     useEffect(() => {
+        // Fetch tasks
         axios.get('/api/escape-room/tasks', {
             headers: {
                 'Content-Type': 'application/json',
@@ -42,8 +43,33 @@ const TaskList = () => {
                     console.error('Error message:', error.message);
                 }
             });
-    }, []);
 
+        // Fetch final task
+        axios.get('/api/escape-room/final-task', {
+            headers: {
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
+            }
+        })
+            .then(response => {
+                const finalTask = response.data;
+                if (finalTask) {
+                    console.log('Fetched final task:', finalTask);
+                }
+            })
+            .catch(error => {
+                if (error.response) {
+                    console.error('Error response:', error.response.data);
+                    console.error('Error status:', error.response.status);
+                    console.error('Error headers:', error.response.headers);
+                } else if (error.request) {
+                    console.error('Error request:', error.request);
+                } else {
+                    console.error('Error message:', error.message);
+                }
+            });
+
+    }, []);
 
     useEffect(() => {
         const handleKeyDown = (event) => {
