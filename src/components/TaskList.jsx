@@ -15,9 +15,10 @@ const TaskList = () => {
     const [finalAnswer, setFinalAnswer] = useState('');
     const [showCelebration, setShowCelebration] = useState(false);
 
+    axios.defaults.baseURL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_URL}/api/escape-room/tasks`)
+        axios.get('/api/escape-room/tasks')
             .then(response => {
                 const tasks = response.data;
                 if (tasks.length > 0) {
@@ -27,7 +28,7 @@ const TaskList = () => {
             })
             .catch(error => console.error('Error fetching tasks:', error));
 
-        axios.get(`${process.env.REACT_APP_API_URL}/api/escape-room/final-task`)
+        axios.get('/api/escape-room/final-task')
             .then(response => {
                 const finalTask = response.data;
                 setFinalTask(finalTask);
