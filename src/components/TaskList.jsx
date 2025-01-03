@@ -54,6 +54,7 @@ const TaskList = () => {
             .then(response => {
                 const finalTask = response.data;
                 if (finalTask) {
+                    setFinalTask(finalTask);
                     console.log('Fetched final task:', finalTask);
                 }
             })
