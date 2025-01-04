@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './TaskList.css';
 import 'react-toastify/dist/ReactToastify.css';
-import { publishURLToScreen, disconnectMQTTClient } from '../mqtt/mqttService';
+import { publishURLToScreen, disconnectMQTTClient, publishLightColor, publishLightSequence} from '../mqtt/mqttService';
+
 import axios from "axios";
 import Confetti from 'react-confetti';
 
@@ -77,6 +78,26 @@ const TaskList = () => {
         };
     }, []);
 
+    /**************lights**************/
+
+    const parseLightSequence = (sequence) => {
+        // Remove extra characters and split into individual colors
+        return sequence
+            .replace(/lightSequence|["\\]/g, "") // Remove "lightSequence", quotes, and backslashes
+            .trim()
+            .split(" ") // Split into individual colors
+            .map((color) => mapColorToRGBW(color.trim())); // Map to RGBW format
+    };
+
+    useEffect(() => {
+        const currentTask = tasks[currentTaskIndex];
+        if (currentTask && currentTask.type === "LIGHT_PUZZLE") {
+            const lightSequenceRaw = currentTask.lightSequence[0]; // Extract raw sequence string
+            const sequence = parseLightSequence(lightSequenceRaw); // Parse and map to RGBW
+            publishLightSequence(sequence, 1000); // Publish the sequence with 1 second duration
+        }
+    }, [currentTaskIndex, tasks]);
+
     useEffect(() => {
         const handleKeyDown = (event) => {
             if (event.key === 'Enter') {
@@ -102,6 +123,18 @@ const TaskList = () => {
         setShowHint(true);
     };
 
+
+    const mapColorToRGBW = (color) => {
+        const colorMap = {
+            purple: "80008000",
+            green: "00FF0000",
+            blue: "0000FF00",
+            red: "FF000000",
+            orange: "FF450000"
+        };
+        return colorMap[color.toLowerCase()] || "FFFFFF00"; // Default to white if color not found
+    };
+
     const handleConfirmClick = () => {
         const currentTask = tasks[currentTaskIndex];
         console.log('Current Task:', currentTask);
@@ -109,6 +142,9 @@ const TaskList = () => {
 
         if (currentTask && answer === currentTask.solution.answer) {
             alert('Correct! Proceeding to the next task...');
+            const rgbwColor = mapColorToRGBW(currentTask.successColor);
+            publishLightColor(rgbwColor, 3000);
+
             setSuccessColors(prevColors => {
                 const newColors = [...prevColors, currentTask.successColor];
                 if (currentTaskIndex + 1 >= tasks.length) {

@@ -45,6 +45,30 @@ client.on("close", () => {
     console.log("MQTT Client connection closed.");
 });
 
+export const publishLightColor = (color, duration = 3000) => {
+    const message = JSON.stringify({ all: color, duration });
+    client.publish("openlab/lights", message, (err) => {
+        if (err) console.error("Failed to publish light color:", err.message);
+        else console.log("Light color published:", message);
+    });
+};
+
+export const publishLightSequence = (sequence, duration = 1000) => {
+    sequence.forEach((color, index) => {
+        setTimeout(() => {
+            const message = JSON.stringify({
+                light: { [index + 1]: color },
+                duration,
+            });
+            client.publish("openlab/lights", message, (err) => {
+                if (err) console.error("Failed to publish light sequence:", err.message);
+                else console.log("Light sequence published:", message);
+            });
+        }, index * duration);
+    });
+};
+
+
 export const publishURLToScreen = (screen, url) => {
     const topic = `openlab/screen/${screen}/url`;
     client.publish(topic, url, { qos: 1 }, (err) => {
