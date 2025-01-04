@@ -1,7 +1,7 @@
 import mqtt from "mqtt";
 
-const client = mqtt.connect("mqtt://openlab.kpi.fei.tuke.sk", {
-    protocol: "mqtt",
+const client = mqtt.connect("wss://openlab.kpi.fei.tuke.sk", {
+    protocol: "wss",
     port: 1883,
     clientId: `mqtt-client-${Date.now()}`,
     keepalive: 10,
