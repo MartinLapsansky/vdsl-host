@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './TaskList.css';
 import 'react-toastify/dist/ReactToastify.css';
+import { publishURLToScreen, disconnectMQTTClient } from '../mqtt/mqttService';
 import axios from "axios";
 import Confetti from 'react-confetti';
 
@@ -35,8 +36,6 @@ const TaskList = () => {
             .catch(error => {
                 if (error.response) {
                     console.error('Error response:', error.response.data);
-                    console.error('Error status:', error.response.status);
-                    console.error('Error headers:', error.response.headers);
                 } else if (error.request) {
                     console.error('Error request:', error.request);
                 } else {
@@ -61,8 +60,6 @@ const TaskList = () => {
             .catch(error => {
                 if (error.response) {
                     console.error('Error response:', error.response.data);
-                    console.error('Error status:', error.response.status);
-                    console.error('Error headers:', error.response.headers);
                 } else if (error.request) {
                     console.error('Error request:', error.request);
                 } else {
@@ -70,6 +67,14 @@ const TaskList = () => {
                 }
             });
 
+    }, []);
+
+    useEffect(() => {
+        // Example: Publish your React app URL to screen 1 (2x2 display)
+        publishURLToScreen(1, "https://martinlapsansky.github.io/vdsl-host/");
+        return () => {
+            disconnectMQTTClient();
+        };
     }, []);
 
     useEffect(() => {
