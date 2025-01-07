@@ -88,7 +88,7 @@
 import * as Paho from "paho-mqtt";
 
 const clientId = `example-client-${Date.now()}`;
-const client = new Paho.MQTT.Client("openlab.kpi.fei.tuke.sk", 8883, clientId);
+const client = new Paho.MQTT.Client("openlab.kpi.fei.tuke.sk/mqtt", 8883, clientId);
 
 // Configure client options
 const options = {
