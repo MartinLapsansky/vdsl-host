@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './TaskList.css';
 import 'react-toastify/dist/ReactToastify.css';
-import { publishURLToScreen,publishLightColor, publishLightSequence} from '../mqtt/mqttService';
+import { publishURLToScreen,publishLightColor, disconnectMQTTClient, publishLightSequence} from '../mqtt/mqttService';
 
 import axios from "axios";
 import Confetti from 'react-confetti';
@@ -73,9 +73,9 @@ const TaskList = () => {
     useEffect(() => {
         // Example: Publish your React app URL to screen 1 (2x2 display)
         publishURLToScreen(1, "https://martinlapsansky.github.io/vdsl-host/");
-        // return () => {
-        //     disconnectMQTTClient();
-        // };
+        return () => {
+            disconnectMQTTClient();
+        };
     }, []);
 
     /**************lights**************/
