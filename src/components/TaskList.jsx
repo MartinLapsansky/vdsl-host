@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './TaskList.css';
 import 'react-toastify/dist/ReactToastify.css';
-import { publishURLToScreen, publishLightSequence} from '../mqtt/mqttService';
+import { publishURLToScreen,publishLightColor, publishLightSequence} from '../mqtt/mqttService';
 
 import axios from "axios";
 import Confetti from 'react-confetti';
