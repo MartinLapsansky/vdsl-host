@@ -1,87 +1,87 @@
-import mqtt from "mqtt";
+import * as Paho from "undici-types";
 
-const clientId = `example-client-${Date.now()}`;
-const client = mqtt.connect("wss://openlab.kpi.fei.tuke.sk:8883", {
-    protocol: "wss",
-    port: 8883,
-    clientId: clientId,
-    reconnectPeriod: 5000,
-    keepalive: 10,
-    clean: true,
+document.addEventListener("DOMContentLoaded", () => {
+    const clientId = `example-client-${Date.now()}`;
+    const mqttClient = new Paho.Client("openlab.kpi.fei.tuke.sk", 80, clientId);
 
-});
+    function logMessage(message) {
+        console.log(message);
+        const elem = document.createElement("div");
+        elem.textContent = message;
+        document.getElementById("messages")?.appendChild(elem);
+    }
 
-client.on("connect", () => {
-    console.log("MQTT Client connected.");
+    function onConnect() {
+        logMessage("Connected to MQTT Broker");
+        mqttClient.subscribe("example/test-client/web/messages", (err) => {
+            if (err) {
+                logMessage("Subscription error: " + err.message);
+            } else {
+                logMessage("Subscribed to: example/test-client/web/messages");
+            }
+        });
 
-    // Subscribe to a topic
-    client.subscribe("example/test-client/nodejs/messages", (err) => {
-        if (err) {
-            console.error("Subscription error:", err.message);
-        } else {
-            console.log("Subscribed to topic: example/test-client/nodejs/messages");
+        // Publish a test message
+        sendMessage("Hello World!", "example/test-client/web/messages");
+    }
+
+    function onConnectionLost(responseObject) {
+        if (responseObject.errorCode !== 0) {
+            logMessage("Connection lost: " + responseObject.errorMessage);
         }
+    }
+
+    function onMessageArrived(message) {
+        logMessage(`Message arrived on topic ${message.topic}: ${message.payloadString}`);
+    }
+
+    function sendMessage(text, topic) {
+        const message = new Paho.Message(text);
+        message.destinationName = topic;
+        mqttClient.send(message);
+        logMessage("Sent message: " + text);
+    }
+
+    mqttClient.onConnectionLost = onConnectionLost;
+    mqttClient.onMessageArrived = onMessageArrived;
+
+    const willMessage = new Paho.Message(`${clientId} disconnected`);
+    willMessage.destinationName = "example/test-client/web";
+
+    mqttClient.connect({
+        onSuccess: onConnect,
+        willMessage: willMessage,
+        reconnect: true,
     });
 
-    // Publish a test message
-    client.publish("example/test-client/nodejs/messages", "Hello MQTT from Node.js!", (err) => {
-        if (err) {
-            console.error("Publish error:", err.message);
-        } else {
-            console.log("Message published successfully.");
-        }
-    });
+    // Function to publish light color
+    window.publishLightColor = (color, duration = 3000) => {
+        const message = JSON.stringify({ all: color, duration });
+        sendMessage(message, "openlab/lights");
+    };
+
+    // Function to publish a light sequence
+    window.publishLightSequence = (sequence, duration = 1000) => {
+        sequence.forEach((color, index) => {
+            setTimeout(() => {
+                const message = JSON.stringify({
+                    light: { [index + 1]: color },
+                    duration,
+                });
+                sendMessage(message, "openlab/lights");
+            }, index * duration);
+        });
+    };
+
+    // Function to publish a URL to a specific screen
+    window.publishURLToScreen = (screen, url) => {
+        const topic = `openlab/screen/${screen}/url`;
+        sendMessage(url, topic);
+    };
+
+    // Function to disconnect the client
+    window.disconnectMQTTClient = () => {
+        mqttClient.disconnect();
+        logMessage("MQTT Client disconnected.");
+    };
 });
-
-client.on("message", (topic, message) => {
-    console.log(`Received message on topic ${topic}: ${message.toString()}`);
-});
-
-client.on("error", (err) => {
-    console.error("MQTT Client error:", err.message);
-});
-
-client.on("close", () => {
-    console.log("MQTT Client connection closed.");
-});
-
-export const publishLightColor = (color, duration = 3000) => {
-    const message = JSON.stringify({ all: color, duration });
-    client.publish("openlab/lights", message, (err) => {
-        if (err) console.error("Failed to publish light color:", err.message);
-        else console.log("Light color published:", message);
-    });
-};
-
-export const publishLightSequence = (sequence, duration = 1000) => {
-    sequence.forEach((color, index) => {
-        setTimeout(() => {
-            const message = JSON.stringify({
-                light: { [index + 1]: color },
-                duration,
-            });
-            client.publish("openlab/lights", message, (err) => {
-                if (err) console.error("Failed to publish light sequence:", err.message);
-                else console.log("Light sequence published:", message);
-            });
-        }, index * duration);
-    });
-};
-
-
-export const publishURLToScreen = (screen, url) => {
-    const topic = `openlab/screen/${screen}/url`;
-    client.publish(topic, url, { qos: 1 }, (err) => {
-        if (err) {
-            console.error(`Failed to publish to ${topic}:`, err.message);
-        } else {
-            console.log(`Published URL to screen ${screen}: ${url}`);
-        }
-    });
-};
-
-export const disconnectMQTTClient = () => {
-    client.end();
-};
-
-
