@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen Streaming</title>
+</head>
+<body>
+<button id="start-btn">Začať streamovanie</button>
+<video id="video" autoplay></video>
+<style>
+    video {
+        width: 100vw; /* 100% šírky okna */
+        height: 100vh; /* 100% výšky okna */
+        object-fit: cover; /* Video sa prispôsobí a orezáva, ak je to potrebné */
+    }
+</style>
+
+<script>
+    const startBtn = document.getElementById('start-btn');
+    const video = document.getElementById('video');
+
+    startBtn.onclick = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getDisplayMedia({
+                video: true
+            });
+            video.srcObject = stream;
+        } catch (err) {
+            console.error("Error: " + err);
+        }
+    };
+</script>
+
+</body>
+</html>
