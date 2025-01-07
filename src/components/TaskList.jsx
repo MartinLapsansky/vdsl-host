@@ -17,7 +17,7 @@ const TaskList = () => {
     const [finalAnswer, setFinalAnswer] = useState('');
     const [showCelebration, setShowCelebration] = useState(false);
 
-    axios.defaults.baseURL = 'https://1648-78-99-33-3.ngrok-free.app';
+    axios.defaults.baseURL = 'https://fc9d-78-99-33-3.ngrok-free.app';
 
     useEffect(() => {
         // Fetch tasks
