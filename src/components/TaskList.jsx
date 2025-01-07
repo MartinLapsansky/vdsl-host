@@ -73,9 +73,9 @@ const TaskList = () => {
     useEffect(() => {
         // Example: Publish your React app URL to screen 1 (2x2 display)
         publishURLToScreen(1, "https://martinlapsansky.github.io/vdsl-host/");
-        return () => {
-            disconnectMQTTClient();
-        };
+        // return () => {
+        //     disconnectMQTTClient();
+        // };
     }, []);
 
     /**************lights**************/
