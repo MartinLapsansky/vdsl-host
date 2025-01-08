@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/vdsl-host/static/css/main.11b86d62.css",
-    "main.js": "/vdsl-host/static/js/main.30dd25f8.js",
+    "main.js": "/vdsl-host/static/js/main.54521a67.js",
     "index.html": "/vdsl-host/index.html",
     "main.11b86d62.css.map": "/vdsl-host/static/css/main.11b86d62.css.map",
-    "main.30dd25f8.js.map": "/vdsl-host/static/js/main.30dd25f8.js.map"
+    "main.54521a67.js.map": "/vdsl-host/static/js/main.54521a67.js.map"
   },
   "entrypoints": [
     "static/css/main.11b86d62.css",
-    "static/js/main.30dd25f8.js"
+    "static/js/main.54521a67.js"
   ]
 }
